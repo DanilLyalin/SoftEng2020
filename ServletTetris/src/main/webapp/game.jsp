@@ -19,6 +19,9 @@
         <canvas height="700" width="320" id="GameWindow" style="margin-top: 1.5%;" ></canvas>
         <canvas height="700" width="320" id="LeaderBoard"style="margin-top: 1.5%; margin-left: 2px;"></canvas>
     </div>
+    <div>
+        <p id="top" style="visibility: hidden;">${top}</p>
+    </div>
     <script>
         var GW = document.getElementById('GameWindow');
         var context = GW.getContext('2d');
@@ -64,14 +67,15 @@
             LBcontext.textAlign = 'center';
             LBcontext.textBaseline = 'middle';
             LBcontext.fillText('Leaderboard', LB.width / 2, 30);
-            /*TO DO*/
-            //Функцию для получения списка лидеров
             LBcontext.fillStyle = 'white';
             LBcontext.font = '30px monospace';
-            LBcontext.fillText('BAndosi: 9999', LB.width / 2, 80);
-            LBcontext.fillText('SuperVan: 1337', LB.width / 2, 120);
-            LBcontext.fillText('Your ad: 420', LB.width / 2, 160);
-            LBcontext.fillText('Funny name: 69', LB.width / 2, 200);
+            let jsonTop = document.getElementById('top').innerHTML;
+            jsonTop = JSON.parse(jsonTop);
+            for(let i = 0; i < 10; i++){
+                if (i < jsonTop.length){
+                LBcontext.fillText(jsonTop[i].name+':'+jsonTop[i].score+'\n', LB.width / 2, 80+40*i);
+                }
+            }
         }
 
         function drawGame(){
@@ -97,7 +101,6 @@
             context.fillStyle = 'white';
             context.globalAlpha = 1;
             context.fillRect(0, GW.height-60, GW.width, 60);
-            // пишем надпись белым моноширинным шрифтом по центру
             context.globalAlpha = 1;
             context.fillStyle = 'black';
             context.font = '36px monospace';
