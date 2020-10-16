@@ -1,0 +1,4 @@
+0:0:0:0:0:0:0:1 - - [16/Oct/2020:16:27:21 +0300] "GET /ServletTetris/tetris HTTP/1.1" 404 991 http-bio-8080-exec-1 27
+0:0:0:0:0:0:0:1 - - [16/Oct/2020:16:27:22 +0300] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-3 0
+0:0:0:0:0:0:0:1 - - [16/Oct/2020:16:27:49 +0300] "GET /ServletTetris/game HTTP/1.1" 200 124 http-bio-8080-exec-5 520
+0:0:0:0:0:0:0:1 - - [16/Oct/2020:16:29:45 +0300] "GET /ServletTetris/game HTTP/1.1" 200 24851 http-bio-8080-exec-1 536

@@ -1,1 +1,8 @@
-org/spbstu/servlet/MainServlet.class
+org\spbstu\servlet\AddScoreServlet.class
+org\spbstu\servlet\TopScoresServlet.class
+org\spbstu\servlet\ScoresServlet.class
+org\spbstu\servlet\MainServlet.class
+org\spbstu\database\InitDatabase.class
+org\spbstu\entity\Player.class
+org\spbstu\servlet\AllScoresServlet.class
+org\spbstu\database\Database.class
