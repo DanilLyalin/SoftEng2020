@@ -15,18 +15,21 @@
                                  white-space: nowrap;
                                  text-align: center;
                                  font-size: 0;">
-        <canvas height="640" width="320" id="Left"></canvas>
+        <canvas height="700" width="320" id="Left" style="margin-top: 1.5%; margin-right: 2px;"></canvas>
         <canvas height="700" width="320" id="GameWindow" style="margin-top: 1.5%;" ></canvas>
         <canvas height="700" width="320" id="LeaderBoard"style="margin-top: 1.5%; margin-left: 2px;"></canvas>
     </div>
     <div>
         <p id="top" style="visibility: hidden;">${top}</p>
     </div>
+    
     <script>
         var GW = document.getElementById('GameWindow');
         var context = GW.getContext('2d');
         var LB = document.getElementById('LeaderBoard');
         var LBcontext = LB.getContext('2d');
+        var Left = document.getElementById('Left');
+        var Leftcontext = Left.getContext('2d');
         const pixelSize = 32;
         const heightInPixel = 24;
         const widthInPixel = 12;
@@ -51,6 +54,114 @@
         var figure = [0,0];
         var score = 0;
         var gameSpeed = 100;
+
+        function drawButtonRestart(){
+            var btnRestart = {
+                x:Left.width/2 - 60,
+                y:Left.height/3 - 20,
+                w:120,
+                h:40,
+                text:"Restart",
+                state:"default",
+                draw: function(){
+                    Leftcontext.font = "20px Arial ";
+                    switch(this.state){
+                        case "over":      
+                        Leftcontext.fillStyle = "red";
+                            Leftcontext.fillRect(this.x,this.y,this.w,this.h);
+                        Leftcontext.fillStyle = "black";
+                        Leftcontext.fillText("Restart?",this.x+this.w/2 - Leftcontext.measureText("Restart").width/2,this.y+this.h/2+10 );
+                    break;
+                        default:
+                        Leftcontext.fillStyle = "gray";
+                            Leftcontext.fillRect(this.x,this.y,this.w,this.h);
+                        Leftcontext.fillStyle = "black";
+                        Leftcontext.fillText("Restart",this.x+this.w/2 - Leftcontext.measureText("Restart").width/2,this.y+this.h/2+10 );
+                    }
+                }
+            };
+            btnRestart.draw();
+            Left.addEventListener("mousedown",function(e){
+                    if(checkCollision(e.offsetX,e.offsetY,btnRestart )){
+                        if(playing != false){
+                            playing = false;
+                            result = confirm("Are you sure? Your scores will be lost!");
+                            if (result == true){
+                            document.location.href = "http://localhost:8080/ServletTetris/game";
+                            }
+                            playing = true;
+                        }
+                        else{
+                            document.location.href = "http://localhost:8080/ServletTetris/game";
+                        }
+                    }
+            },false);
+            
+            
+            Left.addEventListener("mousemove",function(e){
+            btnRestart.state = checkCollision(e.offsetX,e.offsetY,btnRestart )?"over":"def";
+                btnRestart.draw();
+            },false);
+            
+            function checkCollision(x,y,obj){
+                return x >= obj.x && x <= obj.x + obj.w &&
+                y >= obj.y && y <= obj.y + obj.h ;
+            }
+        }
+
+        function drawButtonLeaderboard(){
+            var btnLB = {
+                x:Left.width/2 - 60,
+                y:2 * Left.height/3 - 20,
+                w:120,
+                h:40,
+                text:"Leaderboard",
+                state:"default",
+                draw: function(){
+                    Leftcontext.font = "20px Arial ";
+                    switch(this.state){
+                        case "over":      
+                        Leftcontext.fillStyle = "red";
+                            Leftcontext.fillRect(this.x,this.y,this.w,this.h);
+                        Leftcontext.fillStyle = "black";
+                        Leftcontext.fillText("Open?",this.x+this.w/2 - Leftcontext.measureText("Open").width/2,this.y+this.h/2+10 );
+                    break;
+                        default:
+                        Leftcontext.fillStyle = "gray";
+                            Leftcontext.fillRect(this.x,this.y,this.w,this.h);
+                        Leftcontext.fillStyle = "black";
+                        Leftcontext.fillText("Leaderboard",this.x+this.w/2 - Leftcontext.measureText("Leaderboard").width/2,this.y+this.h/2+10 );
+                    }
+                }
+            };
+            btnLB.draw();
+            Left.addEventListener("mousedown",function(e){
+                    if(checkCollision(e.offsetX,e.offsetY,btnLB )){
+                        if(playing != false){
+                            playing = false;
+                            result = confirm("Are you sure? Your scores will be lost!");
+                            if (result == true){
+                            document.location.href = "http://localhost:8080/ServletTetris/scores";
+                            }
+                            playing = true;
+                        }
+                        else{
+                            document.location.href = "http://localhost:8080/ServletTetris/scores";
+                        }
+                    }
+            },false);
+            
+            
+            Left.addEventListener("mousemove",function(e){
+            btnLB.state = checkCollision(e.offsetX,e.offsetY,btnLB )?"over":"def";
+                btnLB.draw();
+            },false);
+            
+            function checkCollision(x,y,obj){
+                return x >= obj.x && x <= obj.x + obj.w &&
+                y >= obj.y && y <= obj.y + obj.h ;
+            }
+        }
 
         function leaderBoard(){
             LBcontext.fillStyle = 'black';
@@ -472,22 +583,24 @@
 
         document.addEventListener('keydown', function(e) {
             // 37 ←, 38 ↑, 39 →, 40 ↓;
-            switch(e.which){
-                case(37): if(movingCheck('left')){
-                            moveLeft();
-                            };
-                          break;
-                case(39): if(movingCheck('right')){
-                            moveRight();
-                          };
-                          break;
-                case(38): rotate();
+            if (playing){
+                switch(e.which){
+                    case(37): if(movingCheck('left')){
+                                moveLeft();
+                                };
                             break;
-                case(40): if(movingCheck('down')){
-                            moveDown();
-                            }
-                          break;
-                default: break;
+                    case(39): if(movingCheck('right')){
+                                moveRight();
+                            };
+                            break;
+                    case(38): rotate();
+                                break;
+                    case(40): if(movingCheck('down')){
+                                moveDown();
+                                }
+                            break;
+                    default: break;
+                }
             }
         });
 
@@ -564,6 +677,8 @@
         figure[1] = 0;
         putInArray(figure[0]);
         leaderBoard();
+        drawButtonRestart();
+        drawButtonLeaderboard();
         function game(){
             fps++;
             drawGame();

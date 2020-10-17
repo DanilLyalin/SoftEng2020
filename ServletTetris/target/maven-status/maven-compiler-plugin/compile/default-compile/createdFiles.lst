@@ -1,5 +1,4 @@
 org\spbstu\servlet\AddScoreServlet.class
-org\spbstu\servlet\TopScoresServlet.class
 org\spbstu\servlet\ScoresServlet.class
 org\spbstu\servlet\MainServlet.class
 org\spbstu\database\InitDatabase.class
