@@ -16,7 +16,7 @@ public class Database {
             Statement statement = conn.createStatement();
 
             String sql = "CREATE TABLE IF NOT EXISTS scores " +
-                    "(score_id int primary key, name varchar(20) NOT NULL,score int," +
+                    "(score_id int auto_increment, name varchar(20) NOT NULL,score int," +
                     "UNIQUE KEY name (name))";
             statement.execute(sql);
             conn.close();
@@ -51,7 +51,7 @@ public class Database {
             Connection conn = DriverManager.getConnection(databaseURL);
             Statement statement = conn.createStatement();
 
-            String sql = "SELECT score,name FROM scores ORDER BY name ASC";
+            String sql = "SELECT score,name FROM scores ORDER BY score DESC";
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 int score = rs.getInt("score");

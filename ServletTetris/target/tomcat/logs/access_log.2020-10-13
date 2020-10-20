@@ -1,2 +1,0 @@
-0:0:0:0:0:0:0:1 - - [13/Oct/2020:13:45:36 +0300] "GET /ServletTetris/tetris HTTP/1.1" 200 119 http-bio-8080-exec-1 876
-0:0:0:0:0:0:0:1 - - [13/Oct/2020:13:45:37 +0300] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-3 0
