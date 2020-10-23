@@ -52,7 +52,7 @@
         var move = true;
         var fps = 0;
         var figure = [0,0];
-        var score = 0;
+        var scores = 0;
         var gameSpeed = 100;
 
         function drawButtonRestart(){
@@ -164,6 +164,8 @@
         }
 
         function leaderBoard(){
+            let jsonTop = document.getElementById('top').innerHTML;
+            jsonTop = JSON.parse(jsonTop);
             LBcontext.fillStyle = 'black';
             LBcontext.fillRect(0, 0, LB.width, LB.height);
             LBcontext.fillStyle = 'white';
@@ -173,19 +175,26 @@
             LBcontext.strokeRect(0, 0, LB.width, 60);
             LBcontext.strokeRect(2, 2, LB.width-3, 58);
             LBcontext.globalAlpha = 1;
+            LBcontext.fillStyle = 'white';
+            LBcontext.fillRect(LB.width/3*2, 3, 2, LB.height);
             LBcontext.fillStyle = 'black';
             LBcontext.font = '36px monospace';
             LBcontext.textAlign = 'center';
             LBcontext.textBaseline = 'middle';
-            LBcontext.fillText('Leaderboard', LB.width / 2, 30);
+            LBcontext.fillText('Top-10 players', LB.width / 2, 30);
             LBcontext.fillStyle = 'white';
             LBcontext.font = '30px monospace';
-            let jsonTop = document.getElementById('top').innerHTML;
-            jsonTop = JSON.parse(jsonTop);
-            for(let i = 0; i < 10; i++){
+            let numSpaces;
+            let spaces ="";
+            for(let i = 0; i < jsonTop.length; i++){
                 if (i < jsonTop.length){
-                LBcontext.fillText(jsonTop[i].name+':'+jsonTop[i].score+'\n', LB.width / 2, 80+40*i);
+                numSpaces = 14 - jsonTop[i].name.length;
+                for(let y = 0; y < numSpaces; y++){
+                    spaces += " ";
                 }
+                LBcontext.fillText(jsonTop[i].name+spaces+jsonTop[i].score+'\n', LB.width / 2, 80+40*i);
+                }
+                spaces ="";
             }
         }
 
@@ -217,7 +226,7 @@
             context.font = '36px monospace';
             context.textAlign = 'center';
             context.textBaseline = 'middle';
-            context.fillText('User score: '+ score, GW.width / 2, GW.height-30);
+            context.fillText('User score: '+ scores, GW.width / 2, GW.height-30);
             context.strokeStyle = 'black';
             context.strokeRect(0, GW.height-60, GW.width, 60);
             context.strokeRect(2, GW.height-58, GW.width-3, 58);
@@ -643,6 +652,7 @@
         }
 
         function cleanLine(){
+            let multiplier = 0;
             let counter = 0;
             for(let i = 2; i < heightInPixel; i++){
                 for(let j = 1; j < widthInPixel; j++){
@@ -656,12 +666,15 @@
                             arrayOfPixels[x][y] = arrayOfPixels[x-1][y];
                         }
                     }
-                    score++;
+                    multiplier++
                     if(gameSpeed > 30){
                         gameSpeed -= 2;
                     }
                 }
                 counter = 0;
+            }
+            if (multiplier > 0){
+                scores += 10 + 20 * (multiplier-1);
             }
         }
 
@@ -696,7 +709,43 @@
                 stopGame();
                 if(!playing){
                     drawGame();
-                    result = prompt("Game over! Your score: "+score+ "! Please enter your name.");
+                    let check = true;
+                    let numGoodChar;
+                    let first = true;
+                    result = prompt("Game over! Your score: "+scores+ "! Please enter your name (Use only a-z, A-Z, 0-9, and 11 letters max).");
+                    while (check){
+                        if (!first) {
+                            result = prompt("Please try to enter your name again (Use only a-z, A-Z, 0-9, and 11 letters max).");
+                        }
+                        first = false;
+                        if (result.length > 11)
+                        {
+                            continue;
+                        }
+                        numGoodChar = 0;
+                        for(let i = 0; i < result.length; i++){
+                                if(result.charCodeAt(i) >= 'a'.charCodeAt(0) && result.charCodeAt(i) <= 'z'.charCodeAt(0) || 
+                                result.charCodeAt(i) >= 'A'.charCodeAt(0) && result.charCodeAt(i) <= 'Z'.charCodeAt(0) || 
+                                result.charCodeAt(i) >= '0'.charCodeAt(0) && result.charCodeAt(i) <= '9'.charCodeAt(0))
+                                {
+                                    numGoodChar += 1;
+                                }
+                            }
+                        if (result.length == numGoodChar){
+                            check = false;
+                        }
+                    }
+                    let Player = {
+                        name: "",
+                        score: 0
+                    }
+                    Player.name = result;
+                    Player.score = scores;
+                    var xhr = new XMLHttpRequest();
+                    var body = JSON.stringify(Player);
+                    xhr.open("POST", 'http://localhost:8080/ServletTetris/scores/add', true);
+                    xhr.send(body);
+                    alert("Added successfully");
                     return;
                 }
                 requestAnimationFrame(game);
