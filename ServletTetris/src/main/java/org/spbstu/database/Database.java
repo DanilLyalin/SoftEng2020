@@ -63,4 +63,18 @@ public class Database {
         }
         return result;
     }
+
+    public Boolean addScore(Player newPlayer) {
+        try {
+            Connection conn = DriverManager.getConnection(databaseURL);
+            Statement statement = conn.createStatement();
+
+            String sql = "INSERT INTO scores (name, score) VALUES('"+newPlayer.name+"',"+newPlayer.score+");";
+            statement.executeUpdate(sql);
+
+        } catch (SQLException throwables) {
+            return false;
+        }
+        return true;
+    }
 }
