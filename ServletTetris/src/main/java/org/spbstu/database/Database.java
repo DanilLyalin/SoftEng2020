@@ -39,6 +39,7 @@ public class Database {
                 String name = rs.getString("name");
                 result.add(new Player(score,name));
             }
+            conn.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -58,6 +59,7 @@ public class Database {
                 String name = rs.getString("name");
                 result.add(new Player(score,name));
             }
+            conn.close();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
@@ -69,9 +71,19 @@ public class Database {
             Connection conn = DriverManager.getConnection(databaseURL);
             Statement statement = conn.createStatement();
 
-            String sql = "INSERT INTO scores (name, score) VALUES('"+newPlayer.name+"',"+newPlayer.score+");";
-            statement.executeUpdate(sql);
-
+            String sql = "SELECT score,name FROM scores WHERE name = '" + newPlayer.name+ "';";
+            ResultSet rs = statement.executeQuery(sql);
+            if (rs.next()){
+                int oldScore = rs.getInt("score");
+                if (oldScore < newPlayer.score){
+                    sql = "UPDATE scores SET score = " + newPlayer.score + " WHERE name = '" + newPlayer.name + "';";
+                    statement.executeUpdate(sql);
+                }
+            }else {
+                sql = "INSERT INTO scores (name, score) VALUES('" + newPlayer.name + "'," + newPlayer.score + ");";
+                statement.executeUpdate(sql);
+            }
+            conn.close();
         } catch (SQLException throwables) {
             return false;
         }
