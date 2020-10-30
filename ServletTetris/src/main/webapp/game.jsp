@@ -17,7 +17,7 @@
                                  font-size: 0;">
         <canvas height="700" width="320" id="Left" style="margin-top: 1.5%; margin-right: 2px;"></canvas>
         <canvas height="700" width="320" id="GameWindow" style="margin-top: 1.5%;" ></canvas>
-        <canvas height="700" width="320" id="LeaderBoard"style="margin-top: 1.5%; margin-left: 20px;"></canvas>
+        <canvas height="700" width="340" id="LeaderBoard"style="margin-top: 1.5%; margin-left: 20px;"></canvas>
     </div>
     <div>
         <p id="top" style="visibility: hidden;">${top}</p>
@@ -240,13 +240,11 @@
             let spaces ="";
             for(let i = 0; i < jsonTop.length; i++){
                 if (i < jsonTop.length){
-                numSpaces = 14 - jsonTop[i].name.length;
-                for(let y = 0; y < numSpaces; y++){
-                    spaces += " ";
+                LBcontext.textAlign = 'left';
+                LBcontext.fillText(jsonTop[i].name, 20 , 80+40*i);
+                LBcontext.textAlign = 'right';
+                LBcontext.fillText(jsonTop[i].score+'\n', LB.width -10 , 80+40*i);
                 }
-                LBcontext.fillText(jsonTop[i].name+spaces+jsonTop[i].score+'\n', LB.width / 2, 80+40*i);
-                }
-                spaces ="";
             }
         }
 
