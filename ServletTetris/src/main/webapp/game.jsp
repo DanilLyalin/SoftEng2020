@@ -17,7 +17,7 @@
                                  font-size: 0;">
         <canvas height="700" width="320" id="Left" style="margin-top: 1.5%; margin-right: 2px;"></canvas>
         <canvas height="700" width="320" id="GameWindow" style="margin-top: 1.5%;" ></canvas>
-        <canvas height="700" width="320" id="LeaderBoard"style="margin-top: 1.5%; margin-left: 2px;"></canvas>
+        <canvas height="700" width="320" id="LeaderBoard"style="margin-top: 1.5%; margin-left: 20px;"></canvas>
     </div>
     <div>
         <p id="top" style="visibility: hidden;">${top}</p>
@@ -54,13 +54,65 @@
         var figure = [0,0];
         var scores = 0;
         var gameSpeed = 100;
+        var nextFig = 0;
+        var nextFigString = "00000000";
+
+        function drawNextText(){
+            Leftcontext.fillStyle = 'white';
+            Leftcontext.globalAlpha = 1;
+            Leftcontext.strokeStyle = 'black';
+            Leftcontext.fillRect(Left.width/2, 0, LB.width, 60);
+            Leftcontext.strokeRect(Left.width/2-53, 0, pixelSize*6-1, 60);
+            Leftcontext.strokeRect(Left.width/2-51, 2, pixelSize*6-3, 58);
+            Leftcontext.fillStyle = 'black';
+            Leftcontext.font = '36px monospace';
+            Leftcontext.textAlign = 'center';
+            Leftcontext.textBaseline = 'middle';
+            Leftcontext.fillText('Next', Left.width/2 + 45, 35);
+        }
+
+        function drawNextFigure(nextNum){
+            Leftcontext.fillStyle = 'black';
+            Leftcontext.fillRect(Left.width/3, 60, pixelSize*6, pixelSize*4);
+            Leftcontext.fillStyle = 'red';
+            switch(nextNum){
+                case(1): nextFigString = "001100001100";
+                         break;
+                case(2): nextFigString = "011110000000";
+                         break;
+                case(3): nextFigString = "000110001100";
+                         break;
+                case(4): nextFigString = "001100000110";
+                         break;
+                case(5): nextFigString = "000010001110";
+                         break;
+                case(6): nextFigString = "010000011100";
+                         break;
+                case(7): nextFigString = "001110000100";
+                         break;
+            }
+            console.log(nextFigString);
+            for(let y = 0; y < 2; y++){
+                for(let x = 0; x < 6; x++){
+                    if(nextFigString[y*6+x] == "1"){
+                        Leftcontext.fillRect(Left.width/3+pixelSize*x, 60+pixelSize+y*pixelSize, pixelSize, pixelSize);
+                    }
+                }
+            }
+            Leftcontext.strokeStyle = 'gray';
+            for(let y = 60; y < 60+pixelSize*4; y+=pixelSize){
+                for(let x = Left.width/3; x < Left.width/3+pixelSize*6; x+=pixelSize){
+                    Leftcontext.strokeRect(x, y, pixelSize, pixelSize);
+                }
+            }
+        }
 
         function drawButtonRestart(){
             var btnRestart = {
-                x:Left.width/2 - 60,
+                x:Left.width/2 - 22,
                 y:Left.height/3 - 20,
-                w:120,
-                h:40,
+                w:130,
+                h:45,
                 text:"Restart",
                 state:"default",
                 draw: function(){
@@ -68,15 +120,15 @@
                     switch(this.state){
                         case "over":      
                         Leftcontext.fillStyle = "red";
-                            Leftcontext.fillRect(this.x,this.y,this.w,this.h);
+                        Leftcontext.fillRect(this.x,this.y,this.w,this.h);
                         Leftcontext.fillStyle = "black";
-                        Leftcontext.fillText("Restart?",this.x+this.w/2 - Leftcontext.measureText("Restart").width/2,this.y+this.h/2+10 );
+                        Leftcontext.fillText("Restart?",this.x+65,this.y+this.h/2+4 );
                     break;
                         default:
                         Leftcontext.fillStyle = "gray";
-                            Leftcontext.fillRect(this.x,this.y,this.w,this.h);
+                        Leftcontext.fillRect(this.x,this.y,this.w,this.h);
                         Leftcontext.fillStyle = "black";
-                        Leftcontext.fillText("Restart",this.x+this.w/2 - Leftcontext.measureText("Restart").width/2,this.y+this.h/2+10 );
+                        Leftcontext.fillText("Restart",this.x+65,this.y+this.h/2+4 );
                     }
                 }
             };
@@ -111,10 +163,10 @@
 
         function drawButtonLeaderboard(){
             var btnLB = {
-                x:Left.width/2 - 60,
-                y:2 * Left.height/3 - 20,
-                w:120,
-                h:40,
+                x:Left.width/2 - 22,
+                y:Left.height/3 + 40,
+                w:130,
+                h:45,
                 text:"Leaderboard",
                 state:"default",
                 draw: function(){
@@ -122,15 +174,15 @@
                     switch(this.state){
                         case "over":      
                         Leftcontext.fillStyle = "red";
-                            Leftcontext.fillRect(this.x,this.y,this.w,this.h);
+                        Leftcontext.fillRect(this.x,this.y,this.w,this.h);
                         Leftcontext.fillStyle = "black";
-                        Leftcontext.fillText("Open?",this.x+this.w/2 - Leftcontext.measureText("Open").width/2,this.y+this.h/2+10 );
+                        Leftcontext.fillText("Open?",this.x+65,this.y+this.h/2+4 );
                     break;
                         default:
                         Leftcontext.fillStyle = "gray";
-                            Leftcontext.fillRect(this.x,this.y,this.w,this.h);
+                        Leftcontext.fillRect(this.x,this.y,this.w,this.h);
                         Leftcontext.fillStyle = "black";
-                        Leftcontext.fillText("Leaderboard",this.x+this.w/2 - Leftcontext.measureText("Leaderboard").width/2,this.y+this.h/2+10 );
+                        Leftcontext.fillText("Leaderboard",this.x+65,this.y+this.h/2+4);
                     }
                 }
             };
@@ -167,7 +219,7 @@
             let jsonTop = document.getElementById('top').innerHTML;
             jsonTop = JSON.parse(jsonTop);
             LBcontext.fillStyle = 'black';
-            LBcontext.fillRect(0, 0, LB.width, LB.height);
+            LBcontext.fillRect(0, 0, LB.width, 460);
             LBcontext.fillStyle = 'white';
             LBcontext.globalAlpha = 1;
             LBcontext.strokeStyle = 'black';
@@ -176,7 +228,7 @@
             LBcontext.strokeRect(2, 2, LB.width-3, 58);
             LBcontext.globalAlpha = 1;
             LBcontext.fillStyle = 'white';
-            LBcontext.fillRect(LB.width/3*2, 3, 2, LB.height);
+            LBcontext.fillRect(LB.width/3*2, 3, 2, 460);
             LBcontext.fillStyle = 'black';
             LBcontext.font = '36px monospace';
             LBcontext.textAlign = 'center';
@@ -688,8 +740,11 @@
 
         figure[0] = randomInteger(1, 7);
         figure[1] = 0;
+        nextFig = randomInteger(1,7);
         putInArray(figure[0]);
         leaderBoard();
+        drawNextText();
+        drawNextFigure(nextFig);
         drawButtonRestart();
         drawButtonLeaderboard();
         function game(){
@@ -749,9 +804,11 @@
                     return;
                 }
                 requestAnimationFrame(game);
-                figure[0] = randomInteger(1, 7);
+                figure[0] = nextFig;
                 figure[1] = 0;
+                nextFig = randomInteger(1,7);
                 putInArray(figure[0]);
+                drawNextFigure(nextFig);
             }
         }
         raf = requestAnimationFrame(game);
