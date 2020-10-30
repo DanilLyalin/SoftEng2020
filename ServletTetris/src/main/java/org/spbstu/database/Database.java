@@ -16,7 +16,7 @@ public class Database {
             Statement statement = conn.createStatement();
 
             String sql = "CREATE TABLE IF NOT EXISTS scores " +
-                    "(score_id int auto_increment, name varchar(20) NOT NULL,score int," +
+                    "(score_id int auto_increment, name varchar(12) NOT NULL,score int," +
                     "UNIQUE KEY name (name))";
             statement.execute(sql);
             conn.close();
