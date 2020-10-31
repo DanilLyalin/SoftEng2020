@@ -20,7 +20,7 @@
                                  text-align: center;
                                  font-size: 0;">
         <canvas height="700" width="320" id="Left" style="margin-top: 1.5%; margin-right: 2px;"></canvas>
-        <canvas height="700" width="360" id="LeaderBoard" style="margin-top: 1.5%;" ></canvas>
+        <canvas height="700" width="400" id="LeaderBoard" style="margin-top: 1.5%;" ></canvas>
         <canvas height="700" width="320" id="Right"style="margin-top: 1.5%; margin-left: 2px;"></canvas>
     </div>
     <div>

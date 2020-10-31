@@ -17,7 +17,7 @@
                                  font-size: 0;">
         <canvas height="700" width="320" id="Left" style="margin-top: 1.5%; margin-right: 2px;"></canvas>
         <canvas height="700" width="320" id="GameWindow" style="margin-top: 1.5%;" ></canvas>
-        <canvas height="700" width="340" id="LeaderBoard"style="margin-top: 1.5%; margin-left: 20px;"></canvas>
+        <canvas height="700" width="400" id="LeaderBoard"style="margin-top: 1.5%; margin-left: 20px; margin-right: -80px"></canvas>
     </div>
     <div>
         <p id="top" style="visibility: hidden;">${top}</p>
@@ -91,7 +91,6 @@
                 case(7): nextFigString = "001110000100";
                          break;
             }
-            console.log(nextFigString);
             for(let y = 0; y < 2; y++){
                 for(let x = 0; x < 6; x++){
                     if(nextFigString[y*6+x] == "1"){
@@ -736,6 +735,22 @@
             }
         }
 
+        function checkName(someName) {
+            if (someName.length > 12)
+            {
+                return false;
+            }
+            for(let i = 0; i < someName.length; i++){
+                    if((someName.charCodeAt(i) < 'a'.charCodeAt(0) || someName.charCodeAt(i) > 'z'.charCodeAt(0)) && 
+                    (someName.charCodeAt(i) < 'A'.charCodeAt(0) || someName.charCodeAt(i) > 'Z'.charCodeAt(0)) && 
+                    (someName.charCodeAt(i) < '0'.charCodeAt(0) || someName.charCodeAt(i) > '9'.charCodeAt(0)))
+                    {
+                        return false;
+                    }
+                }
+            return true;
+        }
+
         figure[0] = randomInteger(1, 7);
         figure[1] = 0;
         nextFig = randomInteger(1,7);
@@ -762,44 +777,35 @@
                 stopGame();
                 if(!playing){
                     drawGame();
-                    let check = true;
-                    let numGoodChar;
-                    let first = true;
-                    result = prompt("Game over! Your score: "+scores+ "! Please enter your name (Use only a-z, A-Z, 0-9, and 11 letters max).");
-                    while (check){
-                        if (!first) {
-                            result = prompt("Please try to enter your name again (Use only a-z, A-Z, 0-9, and 11 letters max).");
-                        }
-                        first = false;
-                        if (result.length > 11)
-                        {
-                            continue;
-                        }
-                        numGoodChar = 0;
-                        for(let i = 0; i < result.length; i++){
-                                if(result.charCodeAt(i) >= 'a'.charCodeAt(0) && result.charCodeAt(i) <= 'z'.charCodeAt(0) || 
-                                result.charCodeAt(i) >= 'A'.charCodeAt(0) && result.charCodeAt(i) <= 'Z'.charCodeAt(0) || 
-                                result.charCodeAt(i) >= '0'.charCodeAt(0) && result.charCodeAt(i) <= '9'.charCodeAt(0))
-                                {
-                                    numGoodChar += 1;
-                                }
+                    let result = "";
+                    if(scores > 0){
+                        result = prompt("Game over! Your score: "+scores+ "! Please enter your name (Use only a-z, A-Z, 0-9, and 12 letters max).");
+                        while(true){
+                            if (checkName(result)){
+                                break;
                             }
-                        if (result.length == numGoodChar){
-                            check = false;
+                            result = prompt("Please try to enter your name again (Use only a-z, A-Z, 0-9, and 12 letters max).");
                         }
+                        let Player = {
+                            name: "",
+                            score: 0
+                        }
+                        Player.name = result;
+                        Player.score = scores;
+                        var xhr = new XMLHttpRequest();
+                        var body = JSON.stringify(Player);
+                        xhr.open("POST", 'http://localhost:8080/ServletTetris/scores/add', true);
+                        xhr.send(body);
+                        alert("Added successfully");
+                        document.location.href = "http://localhost:8080/ServletTetris/game";
+                        return;
                     }
-                    let Player = {
-                        name: "",
-                        score: 0
+                    else{
+                        alert("Game over! Your score: 0! Try again to get to the leaderboard!");
+                        document.location.href = "http://localhost:8080/ServletTetris/game";
+                        return;
                     }
-                    Player.name = result;
-                    Player.score = scores;
-                    var xhr = new XMLHttpRequest();
-                    var body = JSON.stringify(Player);
-                    xhr.open("POST", 'http://localhost:8080/ServletTetris/scores/add', true);
-                    xhr.send(body);
-                    alert("Added successfully");
-                    return;
+                    
                 }
                 requestAnimationFrame(game);
                 figure[0] = nextFig;
