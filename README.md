@@ -75,3 +75,4 @@ ____
 
 + сборка `mvn clean install` 
 + запуск `mvn tomcat7:run -X`
++ тесты `mvn test`
