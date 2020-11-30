@@ -36,7 +36,8 @@ ____
 
 ### Требования
 
-+ Фигуры во время падения должны перемещаться от нажатия клавиш вверх, вниз, влево, вправо
++ Фигуры во время падения должны перемещаться от нажатия клавиш вниз, влево, вправо
++ Падающие фигуры должны вращаться от нажатия клавиши вверх
 + Фигуры должны ускоряться при удерживании клавиши вниз
 + Следующая фигура должна отображаться на экране
 + По завершении игры должно появляться окно с предложением ввести имя игрока
@@ -51,11 +52,13 @@ ____
 
 ### Диаграммы 
 
-***Level 1: A System Context diagram***
 ![Level 1: A System Context diagram](https://github.com/DanilLyalin/SoftEng2020/blob/main/Images/image1.jpg)
 
-***Level 2: A Container diagram***
+***Level 1: A System Context diagram***
+
 ![Level 2: A Container diagram](https://github.com/DanilLyalin/SoftEng2020/blob/main/Images/image2.jpg)
+
+***Level 2: A Container diagram***
 
 <a name="Кодир"></a> 
 
